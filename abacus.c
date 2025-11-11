@@ -52,7 +52,6 @@ char* getNum() {
 		return NULL;
 	}
 	return input_line;
-
 }
 
 int readNum(char s[]) {	//cheating??
@@ -83,7 +82,6 @@ char* makeAb(char s[], int k) {
 	//fullAb[18+k*19] = '\0';
 	return fullAb;
 }
-
 char* newLine(char abacus[]) {
 	int i = 1;
 	for (int q = 0; abacus[q] != '\0'; q++) i++;

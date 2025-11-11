@@ -19,7 +19,7 @@ char* allocateAbacus(int num_lines, int line_length) {
 }
 
 bool isLine(char abacus[], int line) {
-	int i = 1;
+	int i = 2;
 	for (int p = 0; abacus[p] != '\0'; p++) {
 		i++;
 	}
@@ -27,33 +27,19 @@ bool isLine(char abacus[], int line) {
 	if (i >= linelen * line) return true;
 }
 
-// newLine realloc
+// newLine realloc	// FUCKED!!!!!!!!
 void newLine(char **abacus) {
 	int i = 1;
 	for (int p = 0; (*abacus)[p] != '\0'; p++) i++;
 	int newlen = i + linelen;
 	char* newAb = realloc(*abacus, newlen);
 	if (newAb == NULL) return;
-	for (int p = 0; p < linelen; p++) {
-		newAb[p+linelen] = newAb[p];
-		newAb[p] = carryline[p];
-	}
+
+	for (int p = i - 1; p >= 0; p--) newAb[p + linelen] = newAb[p];
+	for (int p = 0; p < linelen; p++) newAb[p] = carryline[p];
+
 	*abacus = newAb;
 }
-
-// alt newLine
-//void newLine(char **abacus) {
-//	int i = 1;
-//	for (int p = 0; (*abacus)[p] != '\0'; p++) i++;
-//	printf("i:%d\n", i);
-//	int newlen = i + linelen;
-//	char* newAb = allocateAbacus(1, newlen);
-//	if (newAb == NULL) return;
-//	for (int p = 0; p < linelen; p++) newAb[p+19] = (*abacus)[p];
-//	for (int p = 0; p < linelen; p++) newAb[p] = carryline[p];
-//	free(*abacus);
-//	*abacus = newAb;
-//}
 
 //need isLine and newLine for this.
 int moveRight(char **abacus, int line) {
@@ -101,6 +87,44 @@ int moveRight(char **abacus, int line) {
 	return 1;
 }
 
+void addition(char **ab1, char **ab2) {
+
+	int len = 0;
+	while ((*ab1)[len] != '\0') len++;
+
+	int k = 1;
+	int q = 1;
+	while (isLine(*ab1, k)) {
+		int line_start = len - (linelen * k) + 1;
+		for (int p = line_start; p < line_start + 17; p++) {
+			if ((*ab1)[p] == '*' && (*ab1)[p - q] == '-') {
+				moveRight(ab2, k);
+				q++;
+			}
+		}
+		k++;
+	}
+}
+
+// input &etc
+char* makeAbacus(char s[]) {
+	char *out = allocateAbacus(1, linelen);
+	out[18] = '\0';
+	for (int i = 0; i < linelen; i++) out[i] = template[i];
+
+	int k = 0;
+	while (s[k] != '\0') k++;
+
+	for (int i = k - 1; i >= 0; i--) {
+		int j = 0;
+		while (j != s[i] - '0') {
+			moveRight(&out, k - i);
+			j++;
+		}
+	}
+	return out;
+}
+
 int main() {
 
 	// test for carry creating new line
@@ -110,7 +134,7 @@ int main() {
 	printf("Ab:\n%s\n", Ab);
 	moveRight(&Ab, 1);
 	printf("moveRight(Ab, 1):\n%s\n", Ab);
-	free(Ab);
+	//free(Ab);
 
 	// test for carry to existing line
 	char* Ab2 = allocateAbacus(1, linelen);
@@ -119,8 +143,19 @@ int main() {
 	newLine(&Ab2);
 	printf("Ab2:\n%s\n", Ab2);
 	moveRight(&Ab2, 1);
+	moveRight(&Ab2, 1);
 	printf("moveRight(Ab2, 1):\n%s\n", Ab2);
+	//free(Ab2);
+
+	//addition
+	addition(&Ab, &Ab2);
+	printf("addition:\n%s", Ab2);
+	free(Ab);
 	free(Ab2);
+
+	char* abonis = makeAbacus(input1);
+	printf("\nmakeAb(%s):\n%s", input1, abonis);
+	free(abonis);
 
 	return 0;
 }
