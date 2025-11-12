@@ -194,16 +194,25 @@ void multiplication(char **ab1, char **ab2) {	//subtraction first? some sort of 
 	free(multiple);
 }
 
-void subtraction(char **ab1, char **ab2) {	//subtracting 1 from 2
+int subtraction(char **ab1, char **ab2) {	//subtracting 1 from 2
 
-	int len1 = 0;
-	int len2 = 0;
-	while ((*ab1)[len1] != '\0') len1++;
- 	while ((*ab2)[len2] != '\0') len2++;
-
-	int bigger = compare(*ab1, *ab2);
-	if (bigger == 2) {
+	bool negative = false;
+	while (moveLeft(ab1, 1) != 2) {
+		if (moveLeft(ab2, 1) == 2) {
+			negative = true;
+			break;
+		}
 	}
+	if (!negative) return 0;
+	while (moveLeft(ab1, 1) != 2) {
+		moveRight(ab2, 1);
+	}
+	return 1;
+}
+
+int division(char *ab1, char *ab2) {
+	char result = initAbacus(19, 1);
+	
 }
 
 // input &etc
@@ -260,8 +269,10 @@ int main() {
 	char* abonis = makeAbacus(input1);
 	printf("\nmakeAb(%s):\n%s", input1, abonis);
 
-	multiplication(&Ab, &abonis);	
-	printf("\nmoveLeft(abonis):\n%s", abonis);
+	//multiplication(&abonis, &Ab);
+	subtraction(&Ab, &abonis);
+	printf("\nabonis - Ab:\n%s", abonis);
+	//printf("\n:\n%s", Ab);
 	free(abonis);
 	free(Ab);
 
