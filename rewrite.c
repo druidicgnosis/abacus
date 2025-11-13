@@ -195,24 +195,39 @@ void multiplication(char **ab1, char **ab2) {	//subtraction first? some sort of 
 }
 
 int subtraction(char **ab1, char **ab2) {	//subtracting 1 from 2
-
+											//added maintaining ab1 value. feels like bloat but necessary for division afaik
 	bool negative = false;
+	char *ab1cpy = initAbacus(1, 19);
+
 	while (moveLeft(ab1, 1) != 2) {
+		moveRight(&ab1cpy, 1);
 		if (moveLeft(ab2, 1) == 2) {
 			negative = true;
 			break;
 		}
 	}
-	if (!negative) return 0;
+	if (!negative) {
+		free(*ab1);
+		*ab1 = ab1cpy;
+		return 0;
+	}
 	while (moveLeft(ab1, 1) != 2) {
 		moveRight(ab2, 1);
+		moveRight(&ab1cpy, 1);
 	}
+	free(*ab1);
+	*ab1 = ab1cpy;
 	return 1;
 }
 
-int division(char *ab1, char *ab2) {
-	char result = initAbacus(19, 1);
-	
+int division(char **ab1, char **ab2) {	//dividing 2 by 1
+	char *result = initAbacus(19, 1);
+	//char *temp = initAbacus(19, 1);
+	while (subtraction(ab1, ab2) != 1) {
+		moveRight(&result, 1);
+	}
+	free(*ab2);
+	*ab2 = result;
 }
 
 // input &etc
@@ -241,7 +256,7 @@ int main() {
 	Ab[18] = '\0';
 	for (int i = 0; i < linelen; i++) Ab[i] = test2[i];
 
-	//printf("Ab:\n%s\n", Ab);
+	printf("Ab:\n%s", Ab);
 	//moveRight(&Ab, 1);
 	//printf("moveRight(Ab, 1):\n%s\n", Ab);
 	////free(Ab);
@@ -272,7 +287,13 @@ int main() {
 	//multiplication(&abonis, &Ab);
 	subtraction(&Ab, &abonis);
 	printf("\nabonis - Ab:\n%s", abonis);
-	//printf("\n:\n%s", Ab);
+	printf("\nAb post subtraction:\n%s", Ab);
+
+	division(&Ab, &abonis);
+	printf("\nabonis / Ab:\n%s", abonis);
+	printf("\nAb post division:\n%s", Ab);
+
+	printf("\n");
 	free(abonis);
 	free(Ab);
 
