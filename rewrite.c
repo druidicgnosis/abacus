@@ -230,6 +230,11 @@ int division(char **ab1, char **ab2) {	//dividing 2 by 1
 	*ab2 = result;
 }
 
+int modulo(char **ab1, char **ab2) {
+	while (subtraction(ab1, ab2) != 1);
+	return 0;
+}
+
 // input &etc
 char* makeAbacus(char s[]) {
 	char *out = allocateAbacus(1, linelen);
@@ -289,9 +294,14 @@ int main() {
 	printf("\nabonis - Ab:\n%s", abonis);
 	printf("\nAb post subtraction:\n%s", Ab);
 
+	// division
 	division(&Ab, &abonis);
 	printf("\nabonis / Ab:\n%s", abonis);
 	printf("\nAb post division:\n%s", Ab);
+
+	//modulo
+	modulo(&Ab, &abonis);
+	printf("\nabonis %% Ab:\n%s", abonis);
 
 	printf("\n");
 	free(abonis);
