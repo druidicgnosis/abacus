@@ -216,7 +216,7 @@ int subtraction(char **ab1, char **ab2) {	//subtracting 1 from 2
 }
 
 int division(char **ab1, char **ab2) {	//dividing 2 by 1
-	char *result = initAbacus(19, 1);
+	char *result = initAbacus(LINELEN, 1);
 	//char *temp = initAbacus(19, 1);
 	while (subtraction(ab1, ab2) != 1) {
 		moveRight(&result, 1);
@@ -225,15 +225,31 @@ int division(char **ab1, char **ab2) {	//dividing 2 by 1
 	*ab2 = result;
 }
 
-int modulo(char **ab1, char **ab2) {
-	int res = subtraction(ab1, ab2);
-	while (res != 1) {
-		res = subtraction(ab1, ab2);
-		if (res == 0) break;
+int modulo(char **ab1, char **ab2) {	//ab1 % ab2
+										//also ts bad cause you broke convention
+	//char *ab1cpy = initAbacus(LINELEN, 1);
+	int res = subtraction(ab2, ab1);
+	if (res == 1) {
+		subtraction(ab1, ab2);
+		return 0;
 	}
-	//while (subtraction(ab1, ab2) != 1);
+	while (res != 1) {
+		res = subtraction(ab2, ab1);
+		//addition(ab2, &ab1cpy);
+	}
+	subtraction(ab1, ab2);
 	return 0;
 }
+
+//int modulo(char **ab1, char **ab2) {
+//	int res = subtraction(ab1, ab2);
+//	while (res != 1) {
+//		res = subtraction(ab1, ab2);
+//		if (res == 0) break;
+//	}
+//	//while (subtraction(ab1, ab2) != 1);
+//	return 0;
+//}
 
 // input &etc
 char* makeAbacus(char s[]) {

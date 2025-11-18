@@ -3,8 +3,9 @@
 
 #include "ablib.h"
 
-char* input1 = "123";
-char* input2 = "54321";
+//char* input1 = "123";
+
+//char* get
 
 char* getNum() {
 	size_t input_size = 0;
@@ -45,7 +46,7 @@ int main(int argc, char* argv[]) {
 	};
 	struct expression input;
 
-	char validops[6] = {'+', '-', '*', '/', '%', '\0'};
+	char validops[6] = {'+', '-', '.', '/', '%', '\0'};
 
 	if (argc == 1) shell = true;
 	for (int i = 1; i < argc; i++) {
@@ -66,19 +67,10 @@ int main(int argc, char* argv[]) {
 			else if (argv[i][1] == 'i') shell = true;
 			else printf("are you stupid?");
 		}
-		//else if (argv[i][0] == '+');
 		else {
 			if (input.x == NULL) input.x = argv[i];
 			else if (input.y == NULL) input.y = argv[i];
 		}
-		//else {
-		//	if (input1 == NULL) input1 = argv[i];
-		//	else if (input2 == NULL) input2 = argv[i];
-		//	else {
-		//		printf("are you stupid?");
-		//		return 1;
-		//	}
-		//}
 	}
 
 	if ((input.x == NULL || input.y == NULL) && shell == false) {
@@ -113,7 +105,7 @@ int main(int argc, char* argv[]) {
 		case '-':
 			subtraction(&abacus2, &abacus1);
 			break;
-		case '*':
+		case '.':
 			multiplication(&abacus2, &abacus1);
 			break;
 		case '/':
