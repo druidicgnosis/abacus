@@ -10,7 +10,7 @@
 char* getNum() {
 	size_t input_size = 0;
 	char* input_line = NULL;
-	printf("Give us a number: ");
+	printf("> ");
 	if (getline(&input_line, &input_size, stdin) == -1) {
 		free(input_line);
 		return NULL;
@@ -21,14 +21,32 @@ char* getNum() {
 	return input_line;
 }
 
-int readNum(char s[]) {	//cheating??
-	int k = 0;
-	for (int i = 0; s[i] != '\0'; i++) {
-		for (char c = '0'; c <= '9'; c++) {
-			if (s[i] == c) k++;
+int getExpr(char** x, char** y, char* op) {
+	char *inpud = getNum();
+	if (inpud == NULL) {
+		return -1;
+	}
+	char **element[] = {x, (char **)op, y};
+	int index = 0;
+	char *start = inpud;
+	for (int i = 0; inpud[i] != '\0' && inpud[i] != '\n'; i++) {
+		if (index > 2) {
+			free(inpud);
+			return 1;
+		}
+		if (inpud[i] == ' ') {
+			inpud[i] = '\0';
+			*element[index++] = start;
+			start = &inpud[i + 1];
 		}
 	}
-	return k;
+	if (index < 2) {
+		free(inpud);
+		return 1;
+	}
+	*element[index] = start;
+	*op = (*element[1])[0];
+	return 0;
 }
 
 int main(int argc, char* argv[]) {
@@ -77,74 +95,49 @@ int main(int argc, char* argv[]) {
 		shell = true;
 	}
 
-	if (shell) {
-		input.x = getNum();
+	while (1) {
+		if (shell) {
+			int getresult = getExpr(&input.x, &input.y, &input.operator);
+			if (getresult == 1) {
+				printf("are you stupid?\n");
+				continue;
+			}
+			else if (getresult == -1) break;
+		}
+
+		char *abacus1 = makeAbacus(input.x);
+		if (!silent) printf("%s\n", abacus1);
+		if (!silent && shell) printf("%c\n", input.operator);
+
+		char *abacus2 = makeAbacus(input.y);
+		if (shell) free(input.x);
+		if (!silent) printf("%s", abacus2);
+
+		switch (input.operator) {
+			case '+':
+				addition(&abacus2, &abacus1);
+				break;
+			case '-':
+				subtraction(&abacus2, &abacus1);
+				break;
+			case '.':
+				multiplication(&abacus2, &abacus1);
+				break;
+			case '/':
+				division(&abacus2, &abacus1);
+				break;
+			case '%':
+				modulo(&abacus2, &abacus1);
+				break;
+		}
+		printf("\n=\n%s", abacus1);
+
+		printf("\n");
+		free(abacus2);
+		free(abacus1);
+
+		if (!shell) break;
 	}
-	//if (!shell) input.x = argv[1];
-	//int g = readNum(input.x);
-
-	char *abacus1 = makeAbacus(input.x);
-	if (shell) free(input.x);
-	if (!silent) printf("%s\n", abacus1);
-	if (!silent && !shell) printf("%c\n", input.operator);
-	//printf("%s\n+\n", abacus1);
-
-	if (shell) input.y = getNum();
-	//if (!shell) input.y = argv[2];
-	//int k2 = readNum(input.y);
-
-	char *abacus2 = makeAbacus(input.y);
-	if (shell) free(input.y);
-	if (!silent) printf("%s", abacus2);
-	//printf("%s\n", abacus2);
-
-	switch (input.operator) {
-		case '+':
-			addition(&abacus2, &abacus1);
-			break;
-		case '-':
-			subtraction(&abacus2, &abacus1);
-			break;
-		case '.':
-			multiplication(&abacus2, &abacus1);
-			break;
-		case '/':
-			division(&abacus2, &abacus1);
-			break;
-		case '%':
-			modulo(&abacus2, &abacus1);
-			break;
-	}
-	//printf("\nabacus2 %c abacus1 = \n%s", input.operator, abacus2);
-	printf("\n=\n%s", abacus1);
-
-	//addition(&abacus1, &abacus2);
-	////printf("%s", abacus2);
-
-	//if (!silent && shell) printf("abacii added:\n%s", abacus2);
-	//if (!silent && !shell && !anim) printf("=\n%s", abacus2);
-	////readAbacus(result);
-	//printf("\n");
-	//free(result);
-
-	// subtraction
-	//int res = subtraction(&abacus1, &abacus2);
-	//if (res == 0) printf("\nabacus2 = abacus2 - abacus1:\n%s", abacus2);
-	//else printf("\nabacus2 = abacus2 - abacus1:\n-%s", abacus2);
-	//printf("\nabacus1 post subtraction:\n%s", abacus1);
-
-	//// division
-	//division(&abacus1, &abacus2);
-	//printf("abacus2 = abacus2 / abacus1:\n%s", abacus2);
-	//printf("\nabacus1 post division:\n%s", abacus1);
-
-	//modulo
-	//modulo(&abacus1, &abacus2);
-	//printf("\nabacus2 %% abacus1:\n%s", abacus2);
-
-	printf("\n");
-	free(abacus2);
-	free(abacus1);
 
 	return 0;
 }
