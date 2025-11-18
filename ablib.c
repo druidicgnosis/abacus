@@ -225,19 +225,17 @@ int division(char **ab1, char **ab2) {	//dividing 2 by 1
 	*ab2 = result;
 }
 
-int modulo(char **ab1, char **ab2) {	//ab1 % ab2
-										//also ts bad cause you broke convention
-	//char *ab1cpy = initAbacus(LINELEN, 1);
-	int res = subtraction(ab2, ab1);
-	if (res == 1) {
-		subtraction(ab1, ab2);
-		return 0;
-	}
+int modulo(char **ab1, char **ab2) {	//ab2 % ab1
+	char *ab1cpy = initAbacus(LINELEN, 1);
+	int res = subtraction(ab1, ab2);
 	while (res != 1) {
-		res = subtraction(ab2, ab1);
-		//addition(ab2, &ab1cpy);
+		res = subtraction(ab1, ab2);
 	}
-	subtraction(ab1, ab2);
+	addition(ab1, &ab1cpy);
+	subtraction(ab2, ab1);
+	free(*ab2);
+	*ab2 = *ab1;
+	*ab1 = ab1cpy;
 	return 0;
 }
 
