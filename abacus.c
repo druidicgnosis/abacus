@@ -3,10 +3,6 @@
 
 #include "ablib.h"
 
-//char* input1 = "123";
-
-//char* get
-
 char* getNum() {
 	size_t input_size = 0;
 	char* input_line = NULL;
@@ -107,11 +103,12 @@ int main(int argc, char* argv[]) {
 
 		char *abacus1 = makeAbacus(input.x);
 		if (!silent) printf("%s\n", abacus1);
-		if (!silent && shell) printf("%c\n", input.operator);
+		if (!silent) printf("%c\n", input.operator);
 
 		char *abacus2 = makeAbacus(input.y);
-		if (shell) free(input.x);
 		if (!silent) printf("%s", abacus2);
+
+		if (shell) free(input.x);
 
 		switch (input.operator) {
 			case '+':
@@ -129,8 +126,14 @@ int main(int argc, char* argv[]) {
 			case '%':
 				modulo(&abacus2, &abacus1);
 				break;
+			default:
+				printf("are you stupid?\n");
+				if (shell) continue;
+				else break;
 		}
-		printf("\n=\n%s", abacus1);
+		if (!silent) printf("\n=\n%s = ", abacus1);
+		int digits = readAbacus(abacus1);
+		printf("%d", digits);
 
 		printf("\n");
 		free(abacus2);

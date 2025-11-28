@@ -99,7 +99,6 @@ int moveLeft(char **abacus, int line) {
 
 	int line_start = len - (LINELEN * line) + 1;
 	int line_end = line_start + LINELEN - 2;
-	//printf("linestart: %c\nlineend: %c\n", (*abacus)[line_start], (*abacus)[line_end]);
 
 	for (int i = line_start; i < line_end; i++) {
 		if ((*abacus)[i+1] == '*' && ((*abacus)[i] == '-')) {
@@ -217,7 +216,6 @@ int subtraction(char **ab1, char **ab2) {	//subtracting 1 from 2
 
 int division(char **ab1, char **ab2) {	//dividing 2 by 1
 	char *result = initAbacus(LINELEN, 1);
-	//char *temp = initAbacus(19, 1);
 	while (subtraction(ab1, ab2) != 1) {
 		moveRight(&result, 1);
 	}
@@ -239,16 +237,6 @@ int modulo(char **ab1, char **ab2) {	//ab2 % ab1
 	return 0;
 }
 
-//int modulo(char **ab1, char **ab2) {
-//	int res = subtraction(ab1, ab2);
-//	while (res != 1) {
-//		res = subtraction(ab1, ab2);
-//		if (res == 0) break;
-//	}
-//	//while (subtraction(ab1, ab2) != 1);
-//	return 0;
-//}
-
 // input &etc
 char* makeAbacus(char s[]) {
 	char *out = initAbacus(LINELEN, 1);
@@ -256,16 +244,39 @@ char* makeAbacus(char s[]) {
 	int k = 0;
 	while (s[k] != '\0') {
 		k++;
-		//printf("k: %d\n", k);
 	}
 
 	for (int i = k - 1; i >= 0; i--) {
-		//printf("i: %d\n", i);
 		int j = 0;
-		while (j != s[i] - '0') {
+
+		char c = '0';
+		if (s[i] < '0' || s[i] > '9') c = s[i];
+		else c = s[i] - '0';
+
+		while (j != c) {
 			moveRight(&out, k - i);
 			j++;
 		}
 	}
+	return out;
+}
+
+int readAbacus(char* aba) {
+
+	int head = 0;
+	int digit = 9;
+	int out = 0;
+	int lineNo = 1;
+
+	do {
+		out *= 10;
+		while (aba[++head] != '-') {
+			digit--;
+		}
+		out += digit;
+		digit = 9;
+		head = LINELEN * lineNo++ - 1;
+	} while (aba[head++] != '\0');
+
 	return out;
 }
