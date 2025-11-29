@@ -85,14 +85,15 @@ int main() {
 		//	q++;
 		//}
 
-		int eflag = shiftRight(&aba, 1);
-		if (eflag == 3) {
+		if (shiftRight(&aba, 1) == 3) p += 10;
+		printf("%s\n", aba);
+
+		if (p > 0 && p % powa == 0) {
 			powa *= 10;
 			q++;
 		}
 		//if (eflag == 0) printf("%s complete\n", aba);
 		//else printf("%s\n", aba);
-		printf("%s\n", aba);
 	}
 	printf("\n");
 }
