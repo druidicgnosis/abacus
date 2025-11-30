@@ -1,15 +1,26 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <math.h>
 
 #include "ablib.h"
 
-int carryAnim(char **abacus, int line) {
+int degub = 0;
+
+int powTen(int i) {
+	int result = 1;
+	for (int p = 0; p < i; p++) {
+		result *= 10;
+	}
+	return result;
+}
+
+int carryAnim(char **abacus, int line) {	// could ts be part of the main function? global bool ts?
 
 	int len = 0;
 	while ((*abacus)[len] != '\0') len++;
 	int line_start = len - (LINELEN * line) + 1;
-	int line_end = line_start + LINELEN - 2;	// why. ts jst linestart + LINELEN -2
+	int line_end = line_start + LINELEN - 2;
 
 	int j = 0;
 	for (int i = line_end - 1; i > line_start; i--) {
@@ -20,7 +31,6 @@ int carryAnim(char **abacus, int line) {
 			char tmp = (*abacus)[i];
 			(*abacus)[i] = (*abacus)[j];
 			(*abacus)[j] = tmp;
-			//free(temp);
 			return 0;
 		}
 	}
@@ -75,10 +85,11 @@ int shiftRight(char **abacus, int line) {	// exits: 0 = completed move, 1 = erro
 }
 
 int main() {
-	bool done = false;
+	int done = 0;
 	char *aba = initAbacus(LINELEN, 1);
+	//char *aba = makeAbacus("9");
 
-	printf("%s\n", "some bull shit that the animation shoul dnot overwrite");
+	if (degub) printf("%s\n", "some bull shit that the animation shoul dnot overwrite");
 
 	printf("%s\n", aba);
 
@@ -98,10 +109,6 @@ int main() {
 		//if (shiftRight(&aba, 1) == 3) p += 10;
 		//printf("%s\n", aba);
 
-		//if (p > 0 && p % powa == 0) {
-		//	powa *= 10;
-		//	q++;
-		//}
 		int eres = shiftRight(&aba, 1);
 		if (eres == 3) {
 			p += 10;
@@ -114,10 +121,13 @@ int main() {
 			q++;
 		}
 		if (caried) {
-			carryAnim(&aba, q - 1);
+			for (int s = 1; s < q; s++) {
+				if ( p % (powa / powTen(q - s)) == 0 ) carryAnim(&aba, s);
+			}
 			--caried;
 		}
-		printf("%s q: %d, caried: %d\n", aba, q, caried);
+		if (degub) printf("%s q: %d, caried: %d, powa: %d, p: %d, powTen(2): %d\n", aba, q, caried, powa, p, powTen(2));
+		else printf("%s\n", aba);
 	}
 	printf("\n");
 }
