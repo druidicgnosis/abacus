@@ -7,13 +7,13 @@ char* template = "|*********-------|";
 char* carryline = "|*********-------|\n";
 
 char* allocateAbacus(int num_lines, int line_length) {
-	char* abacus = (char*)calloc(num_lines * line_length, sizeof(char));
+	char* abacus = calloc(num_lines * line_length, sizeof(char));
 	if (abacus == NULL) exit(EXIT_FAILURE);
 	return abacus;
 }
 
 char* initAbacus(int num_lines, int line_length) {
-	char* abacus = (char*)calloc(num_lines * line_length, sizeof(char));
+	char* abacus = calloc(num_lines * line_length, sizeof(char));
 	if (abacus == NULL) exit(EXIT_FAILURE);
 	for (int i = 0; i < LINELEN; i++) abacus[i] = template[i];
 	return abacus;
@@ -25,7 +25,7 @@ bool isLine(char abacus[], int line) {
 		i++;
 	}
 	if (i < LINELEN * line) return false;
-	if (i >= LINELEN * line) return true;
+	else return true;
 }
 
 // newLine realloc	// unfucked
@@ -132,6 +132,7 @@ int moveLeft(char **abacus, int line) {
 			break;
 		}
 	}
+	return 1;
 }
 
 // new jawns below
@@ -221,6 +222,7 @@ int division(char **ab1, char **ab2) {	//dividing 2 by 1
 	}
 	free(*ab2);
 	*ab2 = result;
+	return 0;
 }
 
 int modulo(char **ab1, char **ab2) {	//ab2 % ab1

@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <math.h>
 
 #include "ablib.h"
 
@@ -106,15 +105,11 @@ int main() {
 
 		printf("\033[0J");
 
-		//if (shiftRight(&aba, 1) == 3) p += 10;
-		//printf("%s\n", aba);
-
 		int eres = shiftRight(&aba, 1);
 		if (eres == 3) {
 			p += 10;
 			caried = 7;
 		}
-		//printf("%s %d\n", aba, q);
 
 		if (p > 0 && p % powa == 0) {
 			powa *= 10;

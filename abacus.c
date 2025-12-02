@@ -50,8 +50,8 @@ int main(int argc, char* argv[]) {
 	bool shell = false;
 	bool silent = false;
 	bool anim = false;
-	char *input1 = NULL;
-	char *input2 = NULL;
+	//char *input1 = NULL;
+	//char *input2 = NULL;
 
 	struct expression {
 		char* x;
