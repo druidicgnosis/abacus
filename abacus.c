@@ -3,6 +3,31 @@
 
 #include "ablib.h"
 
+char* readAbacusStringEd(char* aba) {
+
+	int line_count = 1;
+	while (isLine(aba, line_count + 1) != false)
+	{
+		line_count++;
+	}
+	char* out = calloc(line_count + 1, 1);
+
+	int head = 0;
+	char digit = '9';
+	int lineNo = 0;
+
+	do {
+		while (aba[++head] != '-') {
+			digit--;
+		}
+		out[lineNo] = digit;
+		digit = '9';
+		head = LINELEN * ++lineNo - 1;
+	} while (aba[head++] != '\0');
+
+	return out;
+}
+
 char* getNum() {
 	size_t input_size = 0;
 	char* input_line = NULL;
@@ -136,6 +161,7 @@ int main(int argc, char* argv[]) {
 		printf("%d", digits);
 
 		printf("\n");
+		printf("%s\n", readAbacusStringEd(abacus1));
 		free(abacus2);
 		free(abacus1);
 

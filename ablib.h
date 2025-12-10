@@ -25,5 +25,6 @@ extern int division(char **ab1, char **ab2);
 extern int modulo(char **ab1, char **ab2);
 extern char* makeAbacus(char s[]);
 extern int readAbacus(char* aba);
+extern char* intAb(int num);
 
 #endif
